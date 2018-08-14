@@ -13,7 +13,7 @@ module.exports = {
     //this code is hard to follow, I may turn this into a helper function
     createLocalUser(req.body, (dbRes) => { //callback for when done...uses closure
 
-      switch (dbRes.code) {
+      switch (dbRes.body) {
         case 200:
           res.ok(dbRes.body); //return new user
 
