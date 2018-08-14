@@ -21,4 +21,11 @@ module.exports = {
   //   connection: 'someMongodbServer'
   // }
 
+  keys: {
+    google: {
+      client: 'CLIENT_ID'
+    },
+    
+  }
+
 };

@@ -15,7 +15,7 @@ module.exports = {
 
       switch (dbRes.code) {
         case 200:
-          res.ok(dbRes.user); //return new user
+          res.ok(dbRes.body); //return new user
 
           //!!!!!!!!set the session code
 
@@ -54,7 +54,30 @@ module.exports = {
   },
 
   google: function (req, res, proceed) {
-    res.send('Google Login requested');
+    if (req.method != 'POST') res.send(`Method Requested: ${req.method}`);
+
+    const idtoken = req.body.idtoken;
+
+    processGoogleToken(idtoken, function (dbRes) {
+
+      switch (dbRes.code) {
+        case 200:
+          res.ok(dbRes.body); //return new user
+
+          //!!!!!!!!set the session code
+
+          break;
+        case 401:
+          res.forbidden(dbRes.body);
+          break;
+        default:
+          res.serverError(dbRes.body);
+      }
+
+
+    })
+
+
   },
 
   facebook: function (req, res, proceed) {
@@ -67,6 +90,103 @@ module.exports = {
 
 
 };
+
+/*
+*
+Google Auth
+*
+*/
+
+
+const {OAuth2Client} = require('google-auth-library');
+const clientID = sails.config.keys.google.client;
+const googleClient = new OAuth2Client(clientID);
+
+function processGoogleToken(idToken, cb) {
+  //verify the token
+
+  verify(idToken).catch(err => {
+    cb({
+      code: 401,
+      body: 'Invalid token'
+    });
+    return;
+  }).then(ticket => {
+
+    if (!ticket) return //already had an error
+
+    const payload = ticket.getPayload();
+
+    //create or return user
+    //name, email, platform, id
+    if (!payload) {
+      cb({
+        code: 500,
+        body: 'No payload returned from token'
+      });
+      return
+
+    }
+
+    createOAuthUser({
+      name: payload['name'],
+      email: payload['email'],
+      platform: 'google',
+      authid: payload['sub'],
+      photo: payload['picture']
+    }, cb);
+
+    return
+
+
+  })
+
+}
+
+async function verify(idToken) {
+  const ticket = await googleClient.verifyIdToken({
+    idToken: idToken,
+    audience: clientID
+  });
+
+  return ticket;
+}
+
+function createOAuthUser(params, cb) {
+  //Return promised user .then((err, user, wasCreated))
+  User.findOrCreate({
+    authid: params.authid
+  }, {
+    name: params.name,
+    email: params.email,
+    platform: params.platform,
+    authid: params.authid,
+    photo: params.photo,
+  }).exec((err, user) => {
+
+    if (err) {
+      cb({
+        code: 500,
+        body: err
+      });
+      return;
+    }
+
+    cb({
+      code: 200,
+      body: user.toJSON()
+    });
+
+  });
+};
+
+
+/*
+*
+Local
+*
+*/
+
 
 var bcrypt = require('bcrypt');
 
@@ -97,6 +217,8 @@ function createLocalUser(params, cb) {
           name: params.name,
           email: params.email,
           password: hashPW,
+          platform: local,
+          photo: undefined,
         }).exec(function (err, user) {
 
           if (err) {
@@ -150,17 +272,15 @@ function validateLocalUser(params, cb) {
   });
 }
 
-function createOAuthUser(params, platform) {
-  //Return promised user .then((err, user, wasCreated))
-  return User.findOrCreate({
-    email: params.email
-  }, {
-    name: parmas.name,
-    email: params.email,
-    platform: platform,
-    authid: params.id
-  });
-};
+
+
+
+/*
+*
+Shared
+*
+*/
+
 
 //Retrieve user if exists
 var retrieveUser = function (email, cb) {
