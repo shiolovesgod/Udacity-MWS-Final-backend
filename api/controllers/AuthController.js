@@ -15,7 +15,7 @@ module.exports = {
 
       switch (dbRes.code) {
         case 200:
-          res.ok(dbRes.user); //return new user
+          res.ok(dbRes.body); //return new user
 
           //!!!!!!!!set the session code
 
