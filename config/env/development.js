@@ -25,6 +25,10 @@ module.exports = {
     google: {
       client: 'CLIENT_ID'
     },
+    facebook: {
+      id: 'APP_ID',
+      secret: 'APP_SECRET',
+    }
     
   }
 
