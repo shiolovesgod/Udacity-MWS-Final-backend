@@ -6,6 +6,7 @@
   "keywords": [],
   "dependencies": {
     "bcrypt": "^3.0.0",
+    "google-auth-library": "^1.6.1",
     "include-all": "^1.0.0",
     "rc": "^1.2.8",
     "sails": "^0.12.13",
