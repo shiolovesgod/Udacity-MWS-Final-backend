@@ -108,7 +108,7 @@ function processGoogleToken(idToken, cb) {
   verify(idToken).catch(err => {
     cb({
       code: 401,
-      body: 'Invalid token'
+      body: err.message
     });
     return;
   }).then(ticket => {
