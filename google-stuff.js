@@ -3,7 +3,7 @@
 //https://developers.google.com/api-client-library/javascript/reference/referencedocs#googleauthsignin
 
 const googleBtn = document.body.querySelector('.btn-google');
-const serverAddress = 'http://localhost:1337';
+const serverAddress = 'https://localhost:1337';
 
 function googleSignIn(e) {
   console.log('Trying to sign in');

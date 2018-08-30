@@ -4,8 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="google-signin-client_id" content="685762170340-57tkpqm1mbfmqjklvkl76uq4nkelv4l5.apps.googleusercontent.com">
     <title>Test Google Sign In</title>
 </head>
 
@@ -21,8 +19,12 @@
             <button>Sign in with Facebook</button>
         </div>
 
+    <!-- Load Google's SDK -->
     <script src="https://apis.google.com/js/platform.js?onload=gapiInit" async defer></script>
     <script src="/google-stuff.js" async defer></script>
+
+    <!-- Load FB's SDK -->
+    <script id=fb_sdk src="https://connect.facebook.net/en_US/sdk.js" async defer></script>
     <script src="/facebook-stuff.js" async defer></script>
 </body>
 
