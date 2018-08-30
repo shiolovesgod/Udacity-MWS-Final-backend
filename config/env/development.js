@@ -28,8 +28,19 @@ module.exports = {
     facebook: {
       id: 'APP_ID',
       secret: 'APP_SECRET',
-    }
-    
+    } 
+  },
+
+  //Sails documentation code for SSL:
+  ssl: {
+    ca: require('fs').readFileSync(require('path').resolve(__dirname,'../ssl/cacert.pem')),
+    key: require('fs').readFileSync(require('path').resolve(__dirname,'../ssl/mws-udacity.key')),
+    cert: require('fs').readFileSync(require('path').resolve(__dirname,'../ssl/mws-udacity.pem'))
+  },
+
+  policies: {
+    '*': 'isHTTPS'
   }
+
 
 };
