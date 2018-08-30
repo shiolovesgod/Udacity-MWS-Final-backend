@@ -81,7 +81,25 @@ module.exports = {
   },
 
   facebook: function (req, res, proceed) {
-    res.send(this);
+    if (req.method != 'POST') res.send(`Method Requested: ${req.method}`);
+    const idtoken = req.body.idtoken;
+
+    processFacebookToken(idtoken, function (dbRes) {
+      switch (dbRes.code) {
+        case 200:
+          res.ok(dbRes.body); //return new user
+
+          //!!!!!!!!set the session code
+
+          break;
+        case 401:
+          res.forbidden(dbRes.body);
+          break;
+
+        default:
+          res.serverError(dbRes.body);
+      }
+    })
   },
 
   logout: function (req, res, proceed) {
@@ -93,19 +111,98 @@ module.exports = {
 
 /*
 *
+Facebook Auth
+*
+*/
+
+function processFacebookToken(idToken, cb){
+
+  verifyFacebookToken(idToken).then(res => {
+
+    //If token invalid
+    if (!res.data || !res.data.is_valid){
+      cb({code: 401, body: 'The token is not valid'});  //not sure what comes back if it's bad
+      return
+    }
+
+    //If token valid, get user info from access token
+    const user_id = res.data.user_id;
+
+    //Get name, email, platform, user_id, picture_url
+    let userInfoQuery = {
+      access_token: idToken,
+      fields: 'id,name,email,picture.type(large){url}',
+    }
+
+    fbAPI(`/${user_id}`, userInfoQuery).then(res => {
+
+      createOAuthUser({
+        name: res.name,
+        email: res.email,
+        platform: 'facebook',
+        authid: res.id,
+        photo: res.picture.url
+
+      }, cb);
+
+    });
+
+     
+  }).catch(err => {
+    cb({code: 500, body: err});
+  });
+
+
+}
+
+
+
+//Get an access token for the app
+const fbAppID = sails.config.keys.fb.id;
+const fbAppSecret = sails.config.keys.fb.secret;
+var reqPromise = require('request-promise');
+
+// const appAccessToken = sails.
+
+function verifyFacebookToken(fbToken) {
+  //Use graph API to query FB
+  queryString = {
+    input_token: fbToken,
+    access_token: `${fbAppID}|${fbAppSecret}`
+  };
+
+  //promise for verification
+  return fbAPI('/debug_token', queryString);
+  
+}
+
+function fbAPI(path, params, method='GET', body='') {
+  //Returns promise
+
+  return reqPromise({
+    method: method,
+    uri: `https://graph.facebook.com${path}`,
+    qs: params,
+    body: body,
+    json: true,
+  });
+
+}
+
+/*
+*
 Google Auth
 *
 */
 
 
 const {OAuth2Client} = require('google-auth-library');
-const clientID = sails.config.keys.google.client;
-const googleClient = new OAuth2Client(clientID);
+
 
 function processGoogleToken(idToken, cb) {
   //verify the token
 
-  verify(idToken).catch(err => {
+  verifyGoogleToken(idToken).catch(err => {
     cb({
       code: 401,
       body: err.message
@@ -143,10 +240,12 @@ function processGoogleToken(idToken, cb) {
 
 }
 
-async function verify(idToken) {
+async function verifyGoogleToken(idToken) {
+  const googleClientID = sails.config.keys.google.client;
+  const googleClient = new OAuth2Client(googleClientID);
   const ticket = await googleClient.verifyIdToken({
     idToken: idToken,
-    audience: clientID
+    audience: googleClientID
   });
 
   return ticket;
