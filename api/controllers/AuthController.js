@@ -5,6 +5,8 @@
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
 
+//NOTE: You still need to find a way to handle users trying to authenticate from different sources with same email (FB & Google)
+
 module.exports = {
   register: function (req, res, proceed) {
 
@@ -15,6 +17,9 @@ module.exports = {
 
       switch (dbRes.body) {
         case 200:
+          //create new session
+          req.session.userId = dbRes.body.id; 
+
           res.ok(dbRes.body); //return new user
 
           //!!!!!!!!set the session code
@@ -36,6 +41,9 @@ module.exports = {
 
       switch (validRes.code) {
         case 200: // all ok
+          //create new session
+          req.session.userId = dbRes.body.id; 
+
           res.ok(validRes.body); //send user
 
           //!!!!!!!!set the session code
@@ -62,6 +70,8 @@ module.exports = {
 
       switch (dbRes.code) {
         case 200:
+          //create new session
+          req.session.userId = dbRes.body.id; 
           res.ok(dbRes.body); //return new user
 
           //!!!!!!!!set the session code
@@ -87,6 +97,8 @@ module.exports = {
     processFacebookToken(idtoken, function (dbRes) {
       switch (dbRes.code) {
         case 200:
+          //create new session
+          req.session.userId = dbRes.body.id; 
           res.ok(dbRes.body); //return new user
 
           //!!!!!!!!set the session code
@@ -254,7 +266,7 @@ async function verifyGoogleToken(idToken) {
 function createOAuthUser(params, cb) {
   //Return promised user .then((err, user, wasCreated))
   User.findOrCreate({
-    authid: params.authid
+    authid: params.authid //problem if you have users with the same emails authenticating with different methods
   }, {
     name: params.name,
     email: params.email,
@@ -291,12 +303,14 @@ var bcrypt = require('bcrypt');
 
 function createLocalUser(params, cb) {
   //Make sure the user doesn't exist
+  //What if they exist using OAUth?
   retrieveUser(params.email, (user) => { //callback after user is found
 
     if (user) {
+      //TO DO: Handle notification for existing user
       cb({
-        code: 400,
-        body: 'User Already Exists'
+        code: 400, //400 --> local user exists, 401 Google User, 402 FB User
+        body: 'User Already Exists' //I may need to tell them how the user exists
       }); //throw error
       return
     } else {
