@@ -14,6 +14,7 @@ module.exports = {
 
     //this code is hard to follow, I may turn this into a helper function
     createLocalUser(req.body, (dbRes) => { //callback for when done...uses closure
+      res.status(dbRes.code);
 
       switch (dbRes.body) {
         case 200:
@@ -37,23 +38,25 @@ module.exports = {
 
     if (req.method != 'POST') res.send(`Method Requested: ${req.method}`);
 
-    validateLocalUser(req.body, (validRes) => {
+    validateLocalUser(req.body, (dbRes) => {
+      res.status(dbRes.code);
 
-      switch (validRes.code) {
+      switch (dbRes.code) {
         case 200: // all ok
           //create new session
           req.session.userId = dbRes.body.id; 
 
-          res.ok(validRes.body); //send user
+          res.ok(dbRes.body); //send user
 
           //!!!!!!!!set the session code
 
           break;
         case 401: //bad password
-          res.forbidden(validRes.body);
+        case 402: //wrong platform
+          res.forbidden(dbRes.body); //overwrites status codes with 403 :(
           break;
         case 404: //user not found
-          res.notFound(validRes.body);
+          res.notFound(dbRes.body);
           break;
       }
     });
@@ -67,7 +70,7 @@ module.exports = {
     const idtoken = req.body.idtoken;
 
     processGoogleToken(idtoken, function (dbRes) {
-
+      res.status(dbRes.code);
       switch (dbRes.code) {
         case 200:
           //create new session
@@ -95,6 +98,7 @@ module.exports = {
     const idtoken = req.body.idtoken;
 
     processFacebookToken(idtoken, function (dbRes) {
+      res.status(dbRes.code);
       switch (dbRes.code) {
         case 200:
           //create new session
@@ -314,7 +318,17 @@ function createLocalUser(params, cb) {
       }); //throw error
       return
     } else {
-      //Passwords and form fields already compared on front end
+      //Already validated on front end, but just make sure passwords match
+      if (params.password !== params.password2) {
+        cb({
+          code: 400,
+          body: 'Passwords do not match',
+        });
+        return
+      }
+
+
+      //Hash password
       var newUser = bcrypt.hash(params.password, 10).then(function (hashPW, err) {
 
         if (err) {
@@ -327,10 +341,10 @@ function createLocalUser(params, cb) {
 
         //create new record
         User.create({
-          name: params.name,
+          name: params.name, 
           email: params.email,
           password: hashPW,
-          platform: local,
+          platform: 'local',
           photo: undefined,
         }).exec(function (err, user) {
 
@@ -361,10 +375,19 @@ function validateLocalUser(params, cb) {
     if (!user) {
       cb({
         code: 404,
-        body: 'User not found'
+        body: 'User not found. Please sign up for an account.'
       });
       return
     }; //user not found
+
+    //if they are not on the local platform, have them sign in through the platform
+    if (user.platform != 'local') {
+      cb({
+        code: 402,
+        body: `Please sign in using ${user.platform[0].toUpperCase()}${user.platform.substring(1)}. If you no long have access to that account, please e-mail support.`,
+      });
+      return
+    }
 
     //check password 
     bcrypt.compare(params.password, user.password).then((match) => {

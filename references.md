@@ -15,3 +15,17 @@ I created a self-signed certificate with openssl to run localhost using https fo
 
 
 Redirect to http from https (for practice)
+
+Udacity Reviewer
+reviewer@udacity.com
+pw: reviewer1
+
+Nunjucks
+https://zellwk.com/blog/nunjucks-with-gulp/
+https://medium.freecodecamp.org/how-to-modularize-html-using-template-engines-and-gulp-d1cb8af54138
+
+
+Using gulp-dest to rewrite destination files
+
+Sass
+Use sass to pre-process css
