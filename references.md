@@ -29,3 +29,9 @@ Using gulp-dest to rewrite destination files
 
 Sass
 Use sass to pre-process css
+
+Modal popup (adapted from taught approach)
+
+Form adapted from:
+<!-- https://www.w3.org/WAI/tutorials/forms/custom-controls/ -->
+

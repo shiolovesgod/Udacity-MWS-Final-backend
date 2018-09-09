@@ -5,6 +5,7 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
+    "@sailshq/upgrade": "^1.0.9",
     "bcrypt": "^3.0.0",
     "google-auth-library": "^1.6.1",
     "include-all": "^1.0.0",
