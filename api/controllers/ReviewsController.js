@@ -8,12 +8,29 @@
 module.exports = {
   'postReview': function (req, res, proceed) {
 
+    //Set CORS header
+    
+
     //Validate user inputs
     createNewReview(req.body, (dbRes)=> {
 
+      //THIS IS NOT BEING SET ON REDIRECT
+      res.set('Access-Control-Allow-Origin', sails.config.cors.origin);
+      res.set('Access-Control-Expose-Headers', 'Access-Control-Allow-Origin')
+      res.header('Access-Control-Allow-Origin', sails.config.cors.origin);
+
       switch(dbRes.code) {
         case 200:
-        res.ok(dbRes.body);
+        if(req.headers.referer || true) { //diable redirect for now
+
+          //SAILS REDIRECT with set headers is broken!
+          // res.redirect(301,`${req.headers.referer}#rNo${dbRes.body.id}`);
+          res.ok(dbRes.body);
+        } else {
+          res.ok(dbRes.body);
+        }
+        
+        
         //should be redirecting
         break;
 
@@ -75,7 +92,7 @@ function validateReviewFields(formData, cb) {
     let isRatingValid = rating && rating < 6 && rating > 0;
 
     //name
-    let isNameValid = Boolean(escape(formData.name));
+    let isNameValid = Boolean(String(formData.name));
 
     let nInvalid = 0;
     let invalidFields = {};
@@ -108,9 +125,9 @@ function validateReviewFields(formData, cb) {
 
       //Correct formats of text & escape text inputs
       newFormData.restaurant_id = rest.id; 
-      newFormData.name = escape(formData.name);
+      newFormData.name = String(formData.name);
       newFormData.rating = rating;
-      newFormData.comments = escape(formData.comments);
+      newFormData.comments = String(formData.comments);
       
       // Run the callback
       cb(undefined, newFormData);

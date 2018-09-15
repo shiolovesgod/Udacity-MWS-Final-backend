@@ -32,15 +32,15 @@ module.exports = {
   },
 
   //Sails documentation code for SSL:
-  ssl: {
-    ca: require('fs').readFileSync(require('path').resolve(__dirname,'../ssl/cacert.pem')),
-    key: require('fs').readFileSync(require('path').resolve(__dirname,'../ssl/mws-udacity.key')),
-    cert: require('fs').readFileSync(require('path').resolve(__dirname,'../ssl/mws-udacity.pem'))
-  },
+  // ssl: {
+  //   ca: require('fs').readFileSync(require('path').resolve(__dirname,'../ssl/cacert.pem')),
+  //   key: require('fs').readFileSync(require('path').resolve(__dirname,'../ssl/mws-udacity.key')),
+  //   cert: require('fs').readFileSync(require('path').resolve(__dirname,'../ssl/mws-udacity.pem'))
+  // },
 
-  policies: {
-    '*': 'isHTTPS'
-  }
+  // policies: {
+  //   '*': 'isHTTPS'
+  // }
 
 
 };
