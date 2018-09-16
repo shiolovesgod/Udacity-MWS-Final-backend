@@ -21,6 +21,8 @@
           "Saturday": "12:00 pm - 4:00 pm, 5:30 pm - 12:00 am",
           "Sunday": "12:00 pm - 4:00 pm, 5:30 pm - 11:00 pm"
         },
+        "total_stars": 11,
+        "total_reviews": 3,
         "createdAt": 1504095563444,
         "updatedAt": "2017-09-14T14:01:27.653Z",
         "id": 1,
@@ -45,6 +47,8 @@
           "Saturday": "5:00 pm - 11:30 pm",
           "Sunday": "12:00 pm - 3:00 pm, 5:00 pm - 11:00 pm"
         },
+        "total_stars": 13,
+        "total_reviews": 3,
         "createdAt": 1504095568414,
         "updatedAt": "2017-09-14T14:05:54.800Z",
         "is_favorite": false,
@@ -69,6 +73,8 @@
           "Saturday": "11:30 am - 6:00 am",
           "Sunday": "11:30 am - 2:00 am"
         },
+        "total_stars": 11,
+        "total_reviews": 3,
         "createdAt": 1504095571434,
         "updatedAt": 1504095571434,
         "id": 3
@@ -92,6 +98,8 @@
           "Saturday": "Open 24 hours",
           "Sunday": "Sat - 10:30 pm"
         },
+        "total_stars": 12,
+        "total_reviews": 3,
         "createdAt": 1504095567091,
         "updatedAt": 1504095567091,
         "is_favorite": false,
@@ -116,6 +124,8 @@
           "Saturday": "10:00 am - 12:00 am",
           "Sunday": "10:00 am - 12:00 am"
         },
+        "total_stars": 12,
+        "total_reviews": 3,
         "createdAt": 1504095567071,
         "updatedAt": 1504095567071,
         "is_favorite": false,
@@ -140,6 +150,8 @@
           "Saturday": "12:00 pm - 11:00 pm",
           "Sunday": "12:00 pm - 9:00 pm"
         },
+        "total_stars": 12,
+        "total_reviews": 3,
         "createdAt": 1504095567071,
         "updatedAt": 1504095567071,
         "is_favorite": false,
@@ -164,6 +176,8 @@
           "Saturday": "11:30 am - 10:00 pm",
           "Sunday": "11:30 am - 10:00 pm"
         },
+        "total_stars": 13,
+        "total_reviews": 3,
         "createdAt": 1504095567091,
         "updatedAt": 1504095567091,
         "is_favorite": false,
@@ -188,6 +202,8 @@
           "Saturday": "10:00 am - 3:00 pm, 5:30 pm - 11:30 pm",
           "Sunday": "10:00 am - 3:00 pm, 5:30 pm - 11:00 pm"
         },
+        "total_stars": 12,
+        "total_reviews": 3,
         "createdAt": 1504095567091,
         "updatedAt": 1504095567091,
         "is_favorite": false,
@@ -212,6 +228,8 @@
           "Saturday": "5:00 pm - 11:00 pm",
           "Sunday": "5:00 pm - 10:00 pm"
         },
+        "total_stars": 12,
+        "total_reviews": 3,
         "createdAt": 1504095567191,
         "updatedAt": 1504095567191,
         "is_favorite": false,
@@ -235,6 +253,8 @@
           "Saturday": "11:00 am - 12:00 am",
           "Sunday": "11:00 am - 12:00 am"
         },
+        "total_stars": 14,
+        "total_reviews": 3,
         "createdAt": 1504095567183,
         "updatedAt": 1504095567183,
         "is_favorite": false,
