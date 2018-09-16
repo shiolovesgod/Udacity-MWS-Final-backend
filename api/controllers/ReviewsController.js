@@ -48,7 +48,7 @@ module.exports = {
 
 function createNewReview(userData, cb) {
   //Validate Inputs
-  validateReviewFields(userData, (err, validData) => {
+  validateReviewFields(userData, (err, validData, rest) => {
     if (err) {
       cb(err)
       return;
@@ -56,6 +56,18 @@ function createNewReview(userData, cb) {
 
     //THEN, add new review
     addReview(validData, cb);
+
+    //UPDATE counts based on review
+    let starCount = parseInt(rest.total_stars) || 0;
+    let reviewCount = parseInt(rest.total_reviews) || 0;
+    Restaurants.update({id: rest.id}, 
+      {
+        total_stars: starCount + validData.rating,
+        total_reviews: reviewCount +1,
+    }).exec((err, updated) => { 
+      if (err) return; //don't worry about it for now
+      console.log(`New Counts for ${updated[0].name}: ${updated[0].total_stars} stars in ${updated[0].total_reviews} reviews`);
+    });
 
   }) 
 
@@ -130,7 +142,7 @@ function validateReviewFields(formData, cb) {
       newFormData.comments = String(formData.comments);
       
       // Run the callback
-      cb(undefined, newFormData);
+      cb(undefined, newFormData, rest);
 
   });
 
