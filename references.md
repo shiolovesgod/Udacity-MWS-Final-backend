@@ -1,37 +1,63 @@
 # References 
 
-This project was built on the sails framework.  Code snippets and documentation from various sources were used
+This document is to provide references for the final project of Udacity MWS Web Development Program.
 
 
-Sign in With Google 
-Token Verification --> Google Documentation
+This project was built on the sails framework.  Code snippets and documentation from various sources were used.
 
 
-Implementing SSL 
-http://www.procoefficient.com/blog/implementing-https-in-sailsjs-the-right-way/
+### Functionality Concepts
+
+* Modal popup adapted from
+  * Udacity's taught approach
+  * WAI reference
+* **Review Form** functionality adapted from:
+  * https://www.w3.org/WAI/tutorials/forms/custom-controls/
+
+### Styling Ideas
+
+* **Notification Shadows**
+  * https://codepen.io/sdthornton/pen/wBZdXq
+
+* Google Maps
 
 
-I created a self-signed certificate with openssl to run localhost using https for interaction with facebook api
+### Backend Framwework
 
+* SailsJS
 
-Redirect to http from https (for practice)
+### Building tools
 
-Udacity Reviewer
-reviewer@udacity.com
-pw: reviewer1
+* Gulp 
+  * `gulp-sass`
+  * `gulp-concat`
+  * `gulp-uglify`
+  * `gulp-uglifycs`
+  * `gulp-dest`
+  * `gulp-sourcemaps`
+* Automated reoloading: `browser-sync`
+* Grunt
+  * Image resizing
+* CSS `sass/scss`
+* Fonts:
+  * Font Awesome
+  * Google Fonts
+* HTML Templates
+  * `Nunjucks` was used to split my HTML into components
 
-Nunjucks
-https://zellwk.com/blog/nunjucks-with-gulp/
-https://medium.freecodecamp.org/how-to-modularize-html-using-template-engines-and-gulp-d1cb8af54138
+### Third party libraries
 
+* Indexed DB with promises: `idb` (thanks Jake)
+* Time manipulation: `moment.js`
+* Lazy Loading: `lozad`
+* picturefill
 
-Using gulp-dest to rewrite destination files
+### Additional Concepts 
 
-Sass
-Use sass to pre-process css
+* Traces of several other components still in development may be seen in the project. I removed as much as I could (without breaking it). 
 
-Modal popup (adapted from taught approach)
-
-Form adapted from:
-<!-- https://www.w3.org/WAI/tutorials/forms/custom-controls/ -->
-
+* These components include
+  * SSL
+    * I built a CA for using https on localhost
+    * It was implemented on the backend with Sails
+  * OAuth from Google & FB 
